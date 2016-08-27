@@ -5,7 +5,8 @@ PLAN
 
 ######
 
-Key determined by average value of position of each letter in title/chapter heading and mode by total number of letters. Time signature determined by mean number of letters in word over mean number closest to 4/8/12/16/32
+Key determined by average value of position of each letter in title/chapter
+heading and mode by total number of letters. Major/minor if even/odd. Time signature determined by mean number of letters in word over mean number closest to 4/8/12/16/32
 
 Each letter is assigned to a note.
 
@@ -20,6 +21,8 @@ semiquaver
 semiquaver+semidemiquaver
 semidemiquaver
 
+Space means pause and is defined by length of previous word to bring position
+to a minum position.
 
 Words with length greater than 5 define a chord that is 2 octaves below melody by combining notes in 1st 3rd and 5th letters.
 
