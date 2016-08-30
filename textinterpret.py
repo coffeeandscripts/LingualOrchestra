@@ -6,7 +6,7 @@
 all_modes = ["Ionian", "Dorian", "Phrygian", "Lydian", "Mixolydian",
     "Aeolian", "Locrian"]
 
-alphabet = "abcdefghijklmnopqrstuvwxyz0123456789"
+alphabet = "elngjmbtdszawfkjrcovqphyiuxk0123456789"
 
 all_notes = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"]
 
@@ -109,14 +109,24 @@ def get_para_tempo(paragraph, med_para_length):
 
     tempo = int(total_words/med_para_length * 90)
 
+    if tempo > 120:
+        tempo = 120
+    elif tempo < 60:
+        tempo = 60
+
     return tempo
 
-def get_sent_tempo(sentence):
+def get_sent_tempo(sentence, med_sent_length):
 
     words = sentence.split(" ")
     total_words = len(words)
 
-    tempo_variation = total_words/28
+    tempo_variation = total_words/med_sent_length
+
+    if tempo_variation < 0.8:
+        tempo_variation = 0.8
+    elif tempo_variation > 1.2:
+        tempo_variation = 1.2
 
     return tempo_variation
 
@@ -124,7 +134,8 @@ def get_note(scale, letter, word, para_tempo, sent_tempo_variation, current_cloc
 
     note_data = ['note']
 
-    note_lengths = ["2", "1.5", "1", "0.75", "0.5", "0.375", "0.25", "0.125"]
+    #note_lengths = ["2", "1", "0.5", "0.25", "0.125"]
+    note_lengths = ["1", "0.125", "0.33", "0.25", "0.5", "0.33", "0.125"]
 
     word_length = len(word) - 1
 
@@ -161,11 +172,11 @@ def get_note(scale, letter, word, para_tempo, sent_tempo_variation, current_cloc
     note_data.append(note_duration)       #duration
     note_data.append(1)                 #channel
     note_data.append(note_midi_value)        #pitch
-    note_data.append(81)        #velocity
+    note_data.append(60 * sent_tempo_variation)        #velocity
 
     return note_data
 
-def get_chord(scale, word, current_clock):
+def get_chord(scale, word, current_clock, sent_tempo_variation):
 
     chord_data = [['note'], ['note'], ['note']]
 
@@ -186,13 +197,13 @@ def get_chord(scale, word, current_clock):
 
         note_value = scale[note_value_position]
 
-        note_midi_value = 36 + all_notes.index(note_value) - 12*octave
+        note_midi_value = 48 + all_notes.index(note_value) - 12*octave
 
-        chord_data[counter].append(current_clock)
+        chord_data[counter].append(current_clock + counter * 10)
         chord_data[counter].append(0)
         chord_data[counter].append(1)
         chord_data[counter].append(note_midi_value)
-        chord_data[counter].append(81)
+        chord_data[counter].append(60 * sent_tempo_variation)
 
         counter = counter + 1
         letter_counter = letter_counter + 2
